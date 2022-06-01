@@ -3,27 +3,30 @@ import pickle
 
 app = Flask(__name__)   #interfaace between web server and app 
 
-model = pickle.load(open("model.pkl", "rb"))
+model = pickle.load(open("model.pkl","rb"))
+sc = pickle.load(open("transform.pkl","rb"))
 
 @app.route('/')
-def hello():
+def home():
     return render_template('index.html')
 
-@app.route('/login', methods = ['POST'])
-def user():
-    p = request.form["rd"]
-    q = request.form["ad"]
-    r = request.form["mkt"]
-    s = request.form["s"]
-    if(s == "cal"):
-        s1,s2,s3 = 1,0,0
-    if(s == "flo"):
-        s1,s2,s3 = 0,1,0
-    if(s == "ny"):
-        s1,s2,s3 = 0,0,1
-    t = [[int(s1), int(s2), int(s3), int(p), int(q), int(r)]]
-    y = model.predict(t)    
-    return render_template('index.html', y="The profit is "+str(y[0][0]))
+@app.route('/predict', methods = ['POST'])
+def predict():
+    a = request.form["cd"]
+    b = request.form["ar"]
+    c = request.form["jf"]
+    d = request.form["mm"]
+    e = request.form["js"]
+    print(a)
+    print(b)
+    print(c)
+    print(d)
+    print(e)
+    data = [[float(a),float(b), float(c), float(d), float(e)]]
+    print(sc.transform(data))
+    prediction = model.predict(sc.transform(data))
+    y = prediction[0]
+    return render_template('index.html', y="The possibility is "+str(y))
 
 if __name__ == '__main__':
     app.run(debug= True)

@@ -19,7 +19,6 @@ def predict():
         mmr = float(request.form.get('mmRain'))
         jsr = float(request.form.get('jsRain'))
         arr = [[cc, ar, jfr, mmr, jsr]]
-        print(arr)
         print((sc.transform(arr)).tolist())
         val = model.predict(sc.transform(arr))
         if(round(val[0])==1):
